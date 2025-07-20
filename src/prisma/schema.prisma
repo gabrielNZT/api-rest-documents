@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  name         String
+  email        String     @unique
+  passwordHash String     @map("senha_hash")
+  datasets     Dataset[]
+  queries      Query[]
+
+  @@map("users")
+}
+
+model Dataset {
+  id        Int      @id @default(autoincrement())
+  name      String
+  userId    Int      @map("usuario_id")
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) @map("criado_em")
+  records   Record[]
+
+  @@map("datasets")
+}
+
+model Record {
+  id        Int      @id @default(autoincrement())
+  datasetId Int      @map("dataset_id")
+  dataset   Dataset  @relation(fields: [datasetId], references: [id])
+  jsonData  Json     @map("dados_json")
+  createdAt DateTime @default(now()) @map("criado_em")
+
+  @@map("records")
+}
+
+model Query {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("usuario_id")
+  user      User     @relation(fields: [userId], references: [id])
+  question  String   @map("pergunta")
+  answer    String   @map("resposta")
+  createdAt DateTime @default(now()) @map("criado_em")
+
+  @@map("queries")
+}
