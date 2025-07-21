@@ -1,25 +1,29 @@
 const prisma = require('../lib/prisma');
-const fs = require('fs');
 const { parseFileContent } = require('../utils/fileProcessor');
 
 const createDataset = async (file, userId) => {
-  const dataset = await prisma.dataset.create({
-    data: {
-      name: file.originalname,
-      userId,
-    },
-  });
-
   const jsonData = await parseFileContent(file);
 
-  await prisma.record.create({
-    data: {
-      datasetId: dataset.id,
-      jsonData,
-    },
+  const newDataset = await prisma.$transaction(async (tx) => {
+    
+    const dataset = await tx.dataset.create({
+      data: {
+        name: file.originalname,
+        userId,
+      },
+    });
+
+    await tx.record.create({
+      data: {
+        datasetId: dataset.id,
+        jsonData,
+      },
+    });
+
+    return dataset;
   });
 
-  return dataset;
+  return newDataset;
 };
 
 const findDatasetsByUserId = (userId) => {
