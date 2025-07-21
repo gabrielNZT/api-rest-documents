@@ -7,11 +7,7 @@ const mockIAResponse = (question) => {
     return "Este documento trata de cláusulas contratuais.";
   }
 
-  if (lowerCaseQuestion.includes("importante")) {
-    return "A IA identificou informações relevantes.";
-  }
-
-  return "Não foi possível identificar um padrão na pergunta.";
+  return "A IA identificou informações relevantes.";
 };
 
 const createQuery = async (userId, question, datasetId) => {
