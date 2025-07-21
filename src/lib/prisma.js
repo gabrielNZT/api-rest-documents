@@ -1,4 +1,19 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+import { PrismaClient } from '@prisma/client'
+import { defineExtension } from '@prisma/client/runtime'
 
-module.exports = prisma;
+const userSafeExtension = defineExtension({
+  name: 'userSafe',
+  model: {
+    user: {
+      safe(user) {
+        if (!user) return null
+        const { passwordHash, ...safeUser } = user
+        return safeUser
+      }
+    }
+  }
+})
+
+const prisma = new PrismaClient().$extends(userSafeExtension)
+
+export default prisma
