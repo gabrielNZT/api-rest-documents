@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client'
-import { defineExtension } from '@prisma/client/runtime'
+const { PrismaClient, defineExtension } = require('@prisma/client');
 
 const userSafeExtension = defineExtension({
   name: 'userSafe',
