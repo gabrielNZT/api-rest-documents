@@ -19,8 +19,6 @@ const createDataset = async (file, userId) => {
     },
   });
 
-  fs.unlinkSync(file.path);
-
   return dataset;
 };
 
