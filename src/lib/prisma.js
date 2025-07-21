@@ -15,4 +15,4 @@ const userSafeExtension = defineExtension({
 
 const prisma = new PrismaClient().$extends(userSafeExtension)
 
-export default prisma
+module.exports = prisma;
