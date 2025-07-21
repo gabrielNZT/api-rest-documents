@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth.routes');
 const datasetRoutes = require('./routes/dataset.routes');
 const recordRoutes = require('./routes/record.routes');
 const queryRoutes = require('./routes/query.routes');
+const meRoutes = require('./routes/me.routes');
 
 dotenv.config();
 
@@ -36,6 +37,8 @@ app.use('/auth', authRoutes);
 app.use('/datasets', datasetRoutes);
 app.use('/records', recordRoutes);
 app.use('/queries', queryRoutes);
+app.use('/me', meRoutes);
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

@@ -74,20 +74,4 @@ router.post('/register', authController.register);
  */
 router.post('/login', authController.login);
 
-/**
- * @swagger
- * /me:
- *   get:
- *     summary: Returns the authenticated user's information
- *     tags: [Auth]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: OK
- *       401:
- *         description: Unauthorized
- */
-router.get('/me', authMiddleware, authController.getMe);
-
 module.exports = router;
