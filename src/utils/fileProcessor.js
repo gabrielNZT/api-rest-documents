@@ -14,7 +14,10 @@ const parseFileContent = async (file) => {
 
     if (type === CSV_MIME_TYPE) {
         const fileContent = fs.readFileSync(file.path, 'utf-8');
-        const rows = fileContent.split('\n').map(row => row.split(','));
+        const rows = fileContent.split('\n').map(line => {
+            const cleanedLine = line.replace(/\r/g, ''); 
+            return cleanedLine.split(',');
+        });
         const headers = rows[0];
 
         const records = rows.slice(1).map(values => {
