@@ -4,24 +4,17 @@ const prisma = require('../lib/prisma');
 const searchRecordsByKeyword = async (userId, query) => {
   const results = await prisma.$queryRaw(
     Prisma.sql`
-      WITH records_filtered AS (
-        SELECT
-          id,
-          dados_json->>'content' AS content,
-          dataset_id,
-          criado_em
-        FROM
-          "records"
-      )
       SELECT
         r.id,
         r.dataset_id,
         r.criado_em
       FROM
-        records_filtered as r
+        "records" r
+        JOIN "datasets" d ON r.dataset_id = d.id
       WHERE
-        content ~* ${query};
-          `
+        d.usuario_id = ${userId}
+        AND unaccent(r.dados_json->>'content') ~* unaccent(${query});
+    `
   );
 
   return results;
