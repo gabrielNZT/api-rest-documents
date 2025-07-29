@@ -1,5 +1,6 @@
 const fs = require('fs');
 const pdf = require('pdf-parse');
+const Papa = require('papaparse');
 
 const parseFileContent = async (file) => {
     const PDF_MIME_TYPE = 'application/pdf';
@@ -16,24 +17,19 @@ const parseFileContent = async (file) => {
 
     if (type === CSV_MIME_TYPE) {
         const fileContent = fs.readFileSync(file.path, 'utf-8');
-        const rows = fileContent.split('\n').map(line => {
-            const cleanedLine = line.replace(/\r/g, '');
-            return cleanedLine.split(',');
-        });
-        const headers = rows[0];
 
-        const records = rows.slice(1).map(values => {
-            const record = {};
-            headers.forEach((header, index) => {
-                record[header] = values[index];
-            });
-            return record;
+        const result = Papa.parse(fileContent, {
+            header: true,
+            skipEmptyLines: true,
+            dynamicTyping: true
         });
+
+        const records = result.data;
 
         return { content: records, size };
     }
 
-    throw new Error('Unsupported file type');
+    throw new Error('Tipo de arquivo não suportado. Apenas PDF e CSV são permitidos.');
 };
 
 module.exports = {
