@@ -1,5 +1,22 @@
 # API Rest Documents
 
+## Deploy Automático das Migrações (Novo)
+
+Desde julho de 2025, o projeto executa automaticamente as migrações do banco de dados ao iniciar o contêiner Docker. Isso é feito pelo script `entrypoint.sh`, que roda o comando `npx prisma migrate deploy` antes de iniciar a aplicação. Dessa forma, o banco de dados estará sempre atualizado com o último esquema definido no Prisma, sem necessidade de comandos manuais.
+
+**Vantagens:**
+- Reduz erros de sincronização entre código e banco de dados.
+- Facilita o deploy em ambientes de produção e desenvolvimento.
+- Não é mais necessário rodar manualmente comandos de migração após subir os contêineres.
+
+**Como funciona:**
+O script `entrypoint.sh` executa:
+
+```sh
+npx prisma migrate deploy
+```
+Logo após, inicia a aplicação Node.js normalmente.
+
 ## 1\. Objetivo do Projeto (Atualizado)
 
 Este projeto desenvolve uma API RESTful que simula o backend de uma plataforma de documentos. Ele foca em: ingestão e gerenciamento de documentos, autenticação de usuários, **análise de conteúdo e respostas a perguntas através da integração com a LLM Google Gemini 1.5 Flash**, e persistência de todos os dados em um banco de dados relacional.
@@ -69,15 +86,9 @@ Isso irá construir a imagem da aplicação, instalar as dependências, gerar o 
 docker compose up -d --build
 ```
 
-### 3.4. Executar Migrações do Prisma
+> **Nota:** Não é mais necessário executar manualmente comandos de migração após subir os contêineres. O processo é automático.
 
-Aplique as migrações do esquema do banco de dados. Este comando precisa ser executado depois que o contêiner do banco de dados estiver em execução.
-
-```bash
-docker compose exec app npx prisma migrate dev --name init --schema=./src/prisma/schema.prisma
-```
-
-### 3.5. Executar a Aplicação
+### 3.4. Executar a Aplicação
 
 A aplicação já deve estar em execução dentro do contêiner Docker. Se você precisar reiniciá-la ou executá-la fora do Docker para desenvolvimento, você pode usar:
 
